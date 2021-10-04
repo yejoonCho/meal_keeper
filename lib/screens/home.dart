@@ -7,6 +7,14 @@ class Home extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     double top = MediaQuery.of(context).padding.top;
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        icon: Icon(Icons.add),
+        label: Text(
+          '식단 추가',
+          style: TextStyle(fontSize: 20),
+        ),
+        onPressed: () {},
+      ),
       body: Column(
         children: [
           SizedBox(height: top),

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "561399476168",
+    "project_id": "meal-keeper",
+    "storage_bucket": "meal-keeper.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561399476168:android:72f4c9a8d7fba30d1fdafd",
+        "android_client_info": {
+          "package_name": "com.example.meal_keeper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "561399476168-gg9d08gap0iaqnlak3qmr82a1cihu6hv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meal_keeper",
+            "certificate_hash": "594a3197de170a235de7133cab6cf2290b62e3eb"
+          }
+        },
+        {
+          "client_id": "561399476168-imt9sqc1u9r2m8925kfn22cgaoouq1ru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPfFTdaqeL52Obieeh5EQSBf9xijan2LU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "561399476168-imt9sqc1u9r2m8925kfn22cgaoouq1ru.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
