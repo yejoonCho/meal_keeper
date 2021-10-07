@@ -1,9 +1,14 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:meal_keeper/providers/DateProvider.dart';
-import 'package:meal_keeper/screens/home.dart';
+import 'package:meal_keeper/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+List<CameraDescription>? cameras;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => DateProvider()),
@@ -13,7 +18,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,7 +26,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: Home(),
+      home: HomeScreen(),
     );
   }
 }

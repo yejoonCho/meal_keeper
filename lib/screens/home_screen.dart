@@ -1,19 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:meal_keeper/providers/DateProvider.dart';
+import 'package:meal_keeper/screens/camera_screen.dart';
 
-class Home extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double top = MediaQuery.of(context).padding.top;
+
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(Icons.add),
-        label: Text(
-          '식단 추가',
-          style: TextStyle(fontSize: 20),
-        ),
-        onPressed: () {},
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton.extended(
+            icon: Icon(Icons.add),
+            label: Text(
+              '카메라로 식단 촬영하기',
+              style: TextStyle(fontSize: 20),
+            ),
+            onPressed: () async {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CameraScreen()));
+            },
+          ),
+          SizedBox(height: 10),
+          FloatingActionButton.extended(
+            icon: Icon(Icons.add),
+            label: Text(
+              '갤러리에서 식단 가져오기',
+              style: TextStyle(fontSize: 20),
+            ),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Column(
         children: [
