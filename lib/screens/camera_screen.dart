@@ -1,7 +1,13 @@
+import 'dart:math';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meal_keeper/main.dart';
+import 'package:meal_keeper/screens/bounding_box.dart';
+import 'package:meal_keeper/screens/check_screen.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -18,8 +24,7 @@ class _CameraScreenState extends State<CameraScreen> {
   bool isWorking = false;
 
   initCamera() {
-    cameraController = CameraController(cameras![0], ResolutionPreset.medium,
-        imageFormatGroup: ImageFormatGroup.yuv420);
+    cameraController = CameraController(cameras![0], ResolutionPreset.medium);
     cameraController!.initialize().then((value) {
       if (!mounted) return;
       setState(() {
@@ -83,61 +88,63 @@ class _CameraScreenState extends State<CameraScreen> {
     initCamera();
   }
 
-  List<Widget> displayBoxesAroundRecognizedObjects(Size screen) {
-    if (recognitions == null) return [];
-    if (imgHeight == null || imgWidth == null) return [];
-
-    double factorX = screen.width;
-    double factorY = imgHeight!;
-    return recognitions!.map((result) {
-      return Positioned(
-        left: result["rect"]["x"] * factorX,
-        top: result["rect"]["y"] * factorY,
-        width: result["rect"]["w"] * factorX,
-        height: result["rect"]["h"] * factorY,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.pink, width: 2.0),
-          ),
-          child: Text(
-            "${result['detectedClass']} ${(result['confidenceInClass'] * 100).toString()}",
-            style: TextStyle(
-              color: Colors.pink,
-              fontSize: 16,
-            ),
-          ),
-        ),
-      );
-    }).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List<Widget> stackChildrenWidgets = [];
-    stackChildrenWidgets.add(Positioned(
-        top: 0.0,
-        left: 0.0,
-        width: size.width,
-        height: size.height - 100,
-        child: (!cameraController!.value.isInitialized)
-            ? Container()
-            : AspectRatio(
-                aspectRatio: cameraController!.value.aspectRatio,
-                child: CameraPreview(cameraController!),
-              )));
-    if (cameraImage != null) {
-      stackChildrenWidgets.addAll(displayBoxesAroundRecognizedObjects(size));
-    }
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('AppBar'),
+        ),
         backgroundColor: Colors.black,
         body: Container(
-          margin: EdgeInsets.only(top: 50),
           color: Colors.black,
           child: Stack(
-            children: stackChildrenWidgets,
+            children: [
+              (!cameraController!.value.isInitialized)
+                  ? Container()
+                  : AspectRatio(
+                      aspectRatio: cameraController!.value.aspectRatio * 0.4,
+                      child: CameraPreview(cameraController!),
+                    ),
+              Positioned(
+                bottom: 20,
+                left: 150,
+                child: ElevatedButton(
+                  child: Icon(Icons.camera_alt_outlined),
+                  onPressed: () async {
+                    try {
+                      super.dispose();
+                      cameraController!.stopImageStream();
+                      XFile picture = await cameraController!.takePicture();
+                      final path = join(
+                        (await getTemporaryDirectory()).path,
+                        '${DateTime.now()}.png',
+                      );
+                      await picture.saveTo(path);
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CheckScreen(
+                                    picture: picture,
+                                    path: path,
+                                    recognitions: recognitions,
+                                  )));
+                    } catch (e) {
+                      print('에러는?' + e.toString());
+                    }
+                  },
+                ),
+              ),
+              if (recognitions != null)
+                for (int i = 0; i < recognitions!.length; i++)
+                  BoundingBox(
+                    recognition: recognitions![i],
+                    factorX: size.width,
+                    factorY: imgHeight!,
+                  )
+            ],
           ),
         ),
       ),
