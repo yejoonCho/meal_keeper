@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:meal_keeper/models/meal.dart';
 import 'package:meal_keeper/providers/DateProvider.dart';
 import 'package:meal_keeper/screens/camera_screen.dart';
+import 'package:meal_keeper/screens/meal_list_tile.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double top = MediaQuery.of(context).padding.top;
+    final meals = Provider.of<List<Meal>>(context);
 
     return Scaffold(
       floatingActionButton: Column(
@@ -74,6 +78,8 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
               )),
+          SizedBox(height: 30),
+          for (Meal meal in meals) MealListTile(meal: meal)
         ],
       ),
     );
