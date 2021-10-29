@@ -1,8 +1,10 @@
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:meal_keeper/models/calorie.dart';
 import 'package:meal_keeper/models/meal.dart';
-import 'package:meal_keeper/providers/DateProvider.dart';
+import 'package:meal_keeper/notifiers/selected_notifier.dart';
+import 'package:meal_keeper/repositories/calorie_repository.dart';
 import 'package:meal_keeper/repositories/meal_repository.dart';
 import 'package:meal_keeper/screens/home_screen.dart';
 import 'package:provider/provider.dart';
@@ -15,14 +17,20 @@ Future<void> main() async {
   await Firebase.initializeApp();
   // 레파지토리
   MealRepository _mealRepository = MealRepository();
+  CalorieRepository _calorieRepository = CalorieRepository();
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (context) => DateProvider()),
       StreamProvider<List<Meal>>(
         create: (context) => _mealRepository.fetch(),
         initialData: [],
       ),
+      FutureProvider<List<Calorie>>(
+        create: (context) => _calorieRepository.fetch(),
+        initialData: [],
+      ),
+      ChangeNotifierProvider<SelectedNotifier>(
+          create: (_) => SelectedNotifier())
     ],
     child: MyApp(),
   ));

@@ -7,15 +7,18 @@ class Meal {
   final List<dynamic>? ingredients;
   final String? imgURL;
   final String? id;
+  final int? calorie;
 
-  String get date => DateFormat('d MMMM y Hm').format(publishedDate!);
+  String get date => DateFormat('yyyy-MM-dd').format(publishedDate!);
 
-  Meal(
-      {this.category,
-      this.publishedDate,
-      this.ingredients,
-      this.imgURL,
-      this.id});
+  Meal({
+    this.category,
+    this.publishedDate,
+    this.ingredients,
+    this.imgURL,
+    this.id,
+    this.calorie,
+  });
 
   factory Meal.fromDocument(DocumentSnapshot doc) {
     final json = doc.data() as Map<String, dynamic>;
@@ -25,6 +28,7 @@ class Meal {
       publishedDate: json['published_date'].toDate(),
       ingredients: json['ingredients'],
       imgURL: json['img_url'],
+      calorie: json['calorie'],
     );
   }
 
@@ -33,7 +37,8 @@ class Meal {
       'category': category,
       'published_date': Timestamp.fromDate(publishedDate!),
       'ingredients': ingredients,
-      'img_url': imgURL
+      'img_url': imgURL,
+      'calorie': calorie,
     };
   }
 }

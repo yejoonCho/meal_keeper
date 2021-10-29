@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meal_keeper/models/calorie.dart';
 import 'package:meal_keeper/models/meal.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:meal_keeper/screens/home_screen.dart';
+import 'package:provider/provider.dart';
 
 class CheckScreen extends StatefulWidget {
   final XFile? picture;
@@ -22,6 +24,7 @@ class _CheckScreenState extends State<CheckScreen> {
   Widget build(BuildContext context) {
     double top = MediaQuery.of(context).padding.top;
     Size size = MediaQuery.of(context).size;
+    final List<Calorie> calories = Provider.of<List<Calorie>>(context);
     return Scaffold(
       body: Column(
         children: [
@@ -84,18 +87,34 @@ class _CheckScreenState extends State<CheckScreen> {
                     detectedClasses
                         .add(widget.recognitions![i]['detectedClass']);
                   }
+
+                  // 칼로리 계산
+                  int entireCalories = 0;
+                  for (int i = 0; i < calories.length; i++) {
+                    for (int j = 0; j < widget.recognitions!.length; j++) {
+                      print(calories[i].name);
+                      print(widget.recognitions![j]['detectedClass']);
+                      if (calories[i].name ==
+                          widget.recognitions![j]['detectedClass']) {
+                        entireCalories += calories[i].calorie!;
+                      }
+                    }
+                  }
+
                   Meal meal = Meal(
                     category: dropdownValue,
                     ingredients: detectedClasses,
                     publishedDate: DateTime.now(),
                     imgURL: downloadURL,
+                    calorie: entireCalories,
                   );
-                  print('식사 객체 생성 완료');
+
                   Map<String, dynamic> result = meal.toJson();
                   print('Map 형태로 변환 완료');
                   await FirebaseFirestore.instance
                       .collection('meals')
                       .add(result);
+
                   // 페이지 이동
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => HomeScreen()));

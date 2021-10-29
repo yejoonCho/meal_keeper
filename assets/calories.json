@@ -1,0 +1,12 @@
+[
+    {"name" : "banana", "calorie": 93},
+    {"name" : "apple", "calorie": 52},
+    {"name" : "sandwich", "calorie": 378},
+    {"name" : "orange", "calorie": 53},
+    {"name" : "broccoli", "calorie": 34},
+    {"name" : "carrot", "calorie": 41},
+    {"name" : "hot dog", "calorie": 289},
+    {"name" : "pizza", "calorie": 2312},
+    {"name" : "donut", "calorie": 452},
+    {"name" : "cake", "calorie": 324}
+] 
